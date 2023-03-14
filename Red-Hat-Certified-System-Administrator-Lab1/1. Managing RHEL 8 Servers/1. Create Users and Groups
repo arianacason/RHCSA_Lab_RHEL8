@@ -1,0 +1,63 @@
+Create Users/Groups and Configure Superuser Access on server1 and server2
+
+Log in to both of your servers
+open up terminal on both servers 
+
+Type the command:
+su - (or sudo -i)       
+enter your password
+
+/* The main difference between the two is that su requires the password of the target account, while sudo requires the password of the current
+user. Therefore, it is much safer to use sudo since it doesn't include exchanging sensitive information. */
+
+
+Use a for loop to create the groups:
+for group in dba_admin dba_intern dba_staff dba_managers it_staff it_managers; do echo  "Creating the "$group" group." ; groupadd $group ; done
+
+Use a for loop to create the new users:
+for user in Fred Sam Mark Amber Jaz Tina ; do echo "Creating the "$user" user." ; useradd -m $user ; done
+
+Modify the users' group ID and user ID:
+usermod -u 1010 -G dba_admin,dba_managers,dba_staff Fred
+usermod -u 1011 -G dba_admin,dba_staff Sam
+usermod -u 1012 -G dba_intern,dba_staff Mark
+usermod -u 1013 -G it_staff,it_managers Amber
+usermod -u 1014 -G dba_admin,dba_staff Jaz
+usermod -u 1015 -G dba_intern,dba_staff Tina
+
+
+Modify the users' group ID and UID:
+groupmod -g 1010 Fred
+groupmod -g 1011 Sam
+groupmod -g 1012 Mark
+groupmod -g 1013 Amber
+groupmod -g 1014 Jaz
+groupmod -g 1015 Tina
+
+
+Fix the group ownership for the home directory:
+for user in Fred Sam Mark Amber Jaz Tina ; do echo "Fixing home directory group ownership for "$user"..." ; chgrp -R $user /home/$user ; done
+
+
+Set user passwords:
+for user in Fred Sam Mark Amber Jaz Tina ; do echo "Setting password for "$user"..." ; usermod -p $(openssl passwd -1 dbapass) $user ; done
+
+
+Edit /etc/sudoers file:
+visudo
+
+Uncomment SOFTWARE, SERVICES, and PROCESSES command aliases.
+
+Add a new command alias for messages logs under ## Drivers:
+## Message Log
+Cmnd_Alias MESSAGES = /bin/tail -f /var/log/messages
+
+
+Add permissions for our groups under %wheel ALL=(ALL) ALL:
+%dba_managers    ALL=(ALL)    ALL
+%dba_admin       ALL=SOFTWARE, SERVICES, PROCESSES
+%dba_intern      ALL=MESSAGES
+
+
+Save and quit /etc/sudoers file:
+:wq

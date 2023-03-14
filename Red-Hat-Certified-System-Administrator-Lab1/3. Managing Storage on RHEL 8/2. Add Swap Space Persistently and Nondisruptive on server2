@@ -1,0 +1,48 @@
+Check swap space:
+swapon
+
+View device names:
+lsblk
+
+Create an MBR partition on that device:
+fdisk <first_unused_2G_device_name>
+
+Type p to list the partitions.
+
+Type n for new, then accept the first three defaults by pressing ENTER.
+
+For Last sector, insert +1G.
+
+Use p to list the partitions again.
+
+Type t to change the partition type to swap.
+
+Type 82 for the hex code.
+
+Use p to list the partitions again.
+
+Type w to write the new partition table.
+
+Confirm newly created partition table:
+fdisk -l <first_unused_2G_device_name>
+
+Format our new swap partition and label of more_swap:
+mkswap -L more_swap <first_unused_2G_device_name_partition1>
+
+Verify device name:
+blkid | grep more_swap
+
+Add it to the /etc/fstab file:
+vi /etc/fstab
+
+Insert the following information under /swapfile swap swap defaults 0 0:
+UUID=<UUID_number>  swap  swap  defaults  0 0
+
+Save and quit:
+:wq
+
+Activate new configuration:
+swapon -a
+
+Verify:
+swapon

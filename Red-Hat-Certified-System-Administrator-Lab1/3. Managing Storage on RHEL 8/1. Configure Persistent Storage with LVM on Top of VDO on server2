@@ -1,0 +1,69 @@
+Become root:
+sudo -i
+
+Check vdo status:
+systemctl status vdo
+
+View device names:
+lsblk
+
+Create vdo volume:
+vdo create --name=web_storage --device=/dev/xvdb --vdoLogicalSize=10G
+
+Check volume:
+vdostats --human-readable
+
+Make our VDO volume a LVM physical volume:
+pvcreate /dev/mapper/web_storage
+
+Create a volume group, and add /dev/mapper/web_storage to it:
+vgcreate web_vg /dev/mapper/web_storage
+
+Create three logical volumes, web_storage_dev, web_storage_qa and web_storage_prod:
+lvcreate -L 2G -n web_storage_dev web_vg
+lvcreate -L 2G -n web_storage_qa web_vg
+lvcreate -L 2G -n web_storage_prod web_vg
+
+Check physical volume:
+pvs
+
+Check volume group:
+vgs
+
+Check logical volume:
+lvs
+
+Put xfs filesystems on new logical volumes:
+mkfs.xfs /dev/mapper/web_vg-web_storage_dev
+mkfs.xfs /dev/mapper/web_vg-web_storage_qa
+mkfs.xfs /dev/mapper/web_vg-web_storage_prod
+
+Create three mount points:
+mkdir /mnt/web_storage_{dev,qa,prod}
+
+Check /mnt directory:
+ls -al /mnt
+
+Check logical volume device names:
+ls -al /dev/mapper/* | grep web
+
+Configure three persistent mounts:
+vi /etc/fstab
+
+Add a mount entry for each logical volume at the very end of the file:
+/dev/mapper/web_vg_web_storage_dev     /mnt/web_storage_dev    xfs   defaults  0 0
+/dev/mapper/web_vg_web_storage_qa      /mnt/web_storage_qa     xfs   defaults  0 0
+/dev/mapper/web_vg_web_storage_prod    /mnt/web_storage_prod   xfs   defaults  0 0
+
+Save and quit:
+:wq
+
+Mount the new logical volumes:
+mount -a
+
+Check mounts:
+mount | grep web
+
+Check the stats on the new logical volumes:
+df -h /mnt/web_storage*
+

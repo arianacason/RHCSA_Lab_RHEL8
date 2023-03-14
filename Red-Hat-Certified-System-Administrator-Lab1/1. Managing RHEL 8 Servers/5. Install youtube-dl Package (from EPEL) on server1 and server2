@@ -1,0 +1,8 @@
+Check if the youtube-dl package is available:
+yum list --available youtube-dl
+
+Install the RPM file from EPEL:
+yum -y install youtube-dl
+
+Verify:
+yum list --installed youtube-dl

@@ -1,0 +1,27 @@
+Edit the /etc/default/grub file:
+vi /etc/default/grub
+
+Set the configuration as the following:
+
+GRUB_TIMEOUT=10
+GRUB_TIMEOUT_STYLE=hidden
+GRUB_DISTRIBUTOR="$(sed 's, release .*$,,g' /etc/system-release)"
+GRUB_DEFAULT=saved
+GRUB_DISABLE_SUBMENU=true
+GRUB_TERMINAL_OUTPUT="console"
+GRUB_CMDLINE_LINUX="console=ttyS0,115200n8 console=tty0 net.ifnames=0 rd.blacklist=nouveau crashkernel=auto quiet"
+GRUB_DISABLE_RECOVERY="true"
+GRUB_ENABABLE_BLSCFG=true
+
+Save and quit:
+:wq
+
+Back up our current configuration:
+mv /boot/grub2/grub.cfg /boot/grub2/grub.cfg.orig
+mv /boot/grub2/grubenv /boot/grub2/grubenv.orig
+
+Apply changes:
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
+Verify /boot/grub2/grub.cfg one more time:
+grep -E 'timeout|quiet' /boot/grub2/grub.cfg | grep -E '10|hidden|quiet'

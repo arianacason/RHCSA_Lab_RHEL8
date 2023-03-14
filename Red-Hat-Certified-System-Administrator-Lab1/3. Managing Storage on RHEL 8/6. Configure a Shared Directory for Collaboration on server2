@@ -1,0 +1,140 @@
+Become root:
+sudo -i
+
+Create the shared directory:
+mkdir /home/dba_docs
+
+Set group ownership to dba_staff on the shared directory:
+chown -R :dba_staff /home/dba_docs
+
+Set the permissions on the /home/dba_docs directory:
+chmod 770 /home/dba_docs
+
+Add the setgid bit for collaboration:
+chmod g+s /home/dba_docs
+
+Add an ACL entry for dba_staff:
+setfacl -Rm d:g:dba_staff:rwx,g:dba_staff:rwx /home/dba_docs
+
+Check the directory:
+stat /home/dba_docs
+
+Check ACL:
+getfacl /home/dba_docs/
+
+Test as user Fred:
+su - Fred
+
+Create a file as Fred:
+touch /home/dba_docs/Fredfile
+
+Verify changes:
+ls -la /home/dba_docs
+
+Create a script as Fred:
+echo "echo You just ran Fred\'s script\!" > /home/dba_docs/Fredscript.sh
+
+Make the script executable by user and group:
+chmod ug+x /home/dba_docs/Fredscript.sh
+
+Verify changes:
+ls -la /home/dba_docs
+cat /home/dba_docs/Fredscript.sh
+
+Execute the script:
+/home/dba_docs/Fredscript.sh
+
+Log out as Fred:
+exit
+
+
+Set the sticky bit:
+chmod o+t /home/dba_docs
+
+Verify changes:
+stat /home/dba_docs
+
+Verify ACL:
+getfacl /home/dba_docs/
+
+
+Test as user Mark:
+su - Mark
+
+Check groups:
+groups
+
+Execute the script:
+/home/dba_docs/Fredscript.sh
+
+Create a file as Mark:
+touch /home/dba_docs/Markfile
+
+Verify:
+ls -al /home/dba_docs/
+
+Log out as Mark:
+exit
+
+
+Set read-only permissions for Mark and Tina:
+setfacl -Rm d:u:Mark:r--,u:Mark:r-- /home/dba_docs
+setfacl -Rm d:u:Tina:r--,u:Tina:r-- /home/dba_docs
+
+Verify changes:
+getfacl /home/dba_docs
+
+
+Test as Tina:
+su - Tina
+
+Check groups:
+groups
+
+Try to execute the script:
+/home/dba_docs/Fredscript.sh
+
+Try to create a file as Tina:
+touch /home/dba_docs/Tinafile
+
+Log out as Tina:
+exit
+
+
+View ACL on /home/dba_docs:
+getfacl /home/dba_docs
+
+
+Set Amber as rwx on /home/dba_docs:
+setfacl -Rm d:u:Amber:rwx,u:Amber:rwx /home/dba_docs
+
+Verify changes:
+getfacl /home/dba_docs
+
+
+Test as Amber:
+su - Amber
+
+Check groups:
+groups
+
+Try to create a file as Amber:
+touch /home/dba_docs/Amberfile
+
+Try to execute the script:
+/home/dba_docs/Fredscript.sh
+
+Verify:
+ls -al /home/dba_docs/
+
+Log out as Amber:
+exit
+
+
+Use a for loop create a soft link in each user's home directory for quick and easy access to our shared directory:
+for user in Fred Sam Mark Amber Jaz Tina ; do echo "Adding soft link for "$user"..." ; ln -s /home/dba_docs /home/$user/dba_docs ; done
+
+
+Verify changes using a for loop:
+for user in Fred Sam Mark Amber Jaz Tina ; do ls -al /home/$user ; done
+

@@ -1,0 +1,20 @@
+Become root:
+sudo -i
+
+Add our export to /etc/exports:
+vi /etc/exports
+
+Insert the following information: (NOTE: Use command ip addr on server1 for private IP address)
+/home	<first_server_private_IP>(rw,sync,no_root_squash)
+
+Save and quit:
+:wq
+
+Enable and start NFS server:
+systemctl enable --now nfs-server
+
+Verify status:
+systemctl status nfs-server
+
+Check NFS exports on our local system:
+showmount -e

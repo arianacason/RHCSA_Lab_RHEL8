@@ -1,0 +1,8 @@
+Install the default AppStream stream/profile for container-tools:
+yum module install container-tools
+
+Check for system updates, but don't install:
+yum check-update | less
+
+Quit check:
+:q

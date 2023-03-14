@@ -1,0 +1,8 @@
+Check the currently active tuned profile:
+tuned-adm active
+
+Set a merged tuned profile using the the powersave and virtual-guest profiles:
+tuned-adm profile powersave virtual-guest
+
+Verify changes:
+tuned-adm active

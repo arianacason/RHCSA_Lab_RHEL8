@@ -1,0 +1,66 @@
+Check for configured repositories:
+ls -al /etc/yum.repos.d/
+
+
+Check for existing repositories:
+yum repolist --all
+
+
+Open a new configuration file for editing:
+vi /etc/yum.repos.d/epel.repo
+
+Add the following information:
+[epel]
+name=Extra Packages for Enterprise Linux
+baseurl=https://download.fedoraproject.org/pub/epel/$releasever/Everything/$basearch
+enabled=1
+gpgcheck=0
+
+Save and quit /etc/yum.repos.d/epel.repo file:
+:wq
+
+
+Open a new configuration file for editing:
+vi /etc/yum.repos.d/rhel-8-appstream.repo
+
+Add the following information:
+[rhel-8-appstream-rhui-rpms]
+name=Red Hat Enterprise Linux 8 for $basearch - AppStream from RHUI (RPMs)
+mirrorlist=https://rhui3.REGION.aws.ce.redhat.com/pulp/mirror/content/dist/rhel8/rhui/$releasever/$basearch/appstream/os
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+sslverify=1
+sslclientkey=/etc/pki/rhui/content-rhel8.key
+sslclientcert=/etc/pki/rhui/product/content-rhel8.crt
+sslcacert=/etc/pki/rhui/cdn.redhat.com-chain.crt
+
+Save and quit /etc/yum.repos.d/rhel-8-appstream.repo file:
+:wq
+
+
+Open a new configuration file for editing:
+vi /etc/yum.repos.d/rhel-8-baseos.repo
+
+Add the following information:
+[rhel-8-baseos-rhui-rpms]
+name=Red Hat Enterprise Linux 8 for $basearch - BaseOS from RHUI (RPMs)
+mirrorlist=https://rhui3.REGION.aws.ce.redhat.com/pulp/mirror/content/dist/rhel8/rhui/$releasever/$basearch/baseos/os
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+sslverify=1
+sslclientkey=/etc/pki/rhui/content-rhel8.key
+sslclientcert=/etc/pki/rhui/product/content-rhel8.crt
+sslcacert=/etc/pki/rhui/cdn.redhat.com-chain.crt
+
+
+Save and quit /etc/yum.repos.d/rhel-8-baseos.repo file:
+:wq
+
+Clean the yum cache:
+yum clean all
+
+
+List our existing repos:
+yum repolist --all

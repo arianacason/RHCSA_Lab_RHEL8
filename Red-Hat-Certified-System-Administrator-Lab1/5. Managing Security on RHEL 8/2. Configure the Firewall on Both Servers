@@ -1,0 +1,75 @@
+On server1, become root:
+sudo -i
+
+Install firewalld:
+yum -y install firewalld
+
+Enable and start firewalld:
+systemctl enable --now  firewalld
+
+Verify firewalld status:
+systemctl status firewalld
+
+On server2, become root:
+sudo -i
+
+Install firewalld:
+yum -y install firewalld
+
+Enable and start firewalld:
+systemctl enable --now  firewalld
+
+Verify firewalld status:
+systemctl status firewalld
+
+On server1, view firewall configuration:
+firewall-cmd --list-all
+
+Add TCP port 85 configuration:
+firewall-cmd --add-port=85/tcp --permanent
+
+Add TCP port 8000 configuration:
+firewall-cmd --add-port=8000/tcp --permanent
+
+Reload the firewall to add changes:
+firewall-cmd --reload
+
+Verify firewall configuration:
+firewall-cmd --list-all
+
+On server2, view firewall configuration:
+firewall-cmd --list-all
+
+Add NFS:
+firewall-cmd --add-service=nfs --permanent
+
+Add NFS3:
+firewall-cmd --add-service=nfs3 --permanent
+
+Add rpc-bind:
+firewall-cmd --add-service=rpc-bind --permanent
+
+Add mountd:
+firewall-cmd --add-service=mountd --permanent
+
+Reload the firewall to add changes:
+firewall-cmd --reload
+
+Verify firewall configuration:
+firewall-cmd --list-all
+
+On server1, view IP addresses:
+ip addr
+
+On server2, use nmap to view open services and ports:
+nmap -A <server1_private_IP>
+
+On server2, view IP addresses:
+ip addr
+
+On server1, use nmap to view open services and ports:
+nmap -A <server2_private_IP>
+
+Now you should be able to reboot to test persistence on both servers. Check services, containers, swap, mounts are persistent and able to survive a reboot.
+
+systemctl reboot

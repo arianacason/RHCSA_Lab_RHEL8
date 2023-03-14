@@ -1,0 +1,17 @@
+On server1, create a compressed archive containing the repository configuration files:
+cd /etc/yum.repos.d ; tar cvfz /home/admin/repos.tar.gz *.repo ; cd
+
+On server1, copy the archive to server2:
+scp /home/admin/repos.tar.gz admin@<second_server_private_IP>:~
+
+On server2, as root, extract the archive in /etc/yum.repos.d:
+cd /etc/yum.repos.d ; tar xvfz /home/admin/repos.tar.gz ; cd
+
+On server2, verify file transfer:
+ls -al /etc/yum.repos.d/
+
+On server2, clean the yum cache:
+yum clean all
+
+On server2, list our existing repos:
+yum repolist --all

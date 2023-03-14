@@ -1,0 +1,27 @@
+Elevate to root:
+sudo -i
+
+Launch nmtui:
+nmtui
+
+Select Edit a connection.
+
+Select your new device, ens3.
+
+Configure IPv4 as the following:
+    IPv4 CONFIGURATION: <Manual> > <Show>
+    Addresses: server1_private_IPv4/24
+    Require IPv4 addressing for this connection: X
+Configure IPv6 as the following:
+    IPv6 CONFIGURATION: <Manual> > <Show>
+    Addresses: server1_private_IPv6/64
+    Automatically connect: X
+    Available to all users: X
+    <OK>
+
+Select Back.
+
+Select Quit.
+
+Validate changes:
+more /etc/sysconfig/network-scripts/ifcfg-ens3

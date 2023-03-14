@@ -1,0 +1,105 @@
+Become root:
+sudo -i
+
+
+Install the autofs package:
+yum -y install autofs
+
+
+Create the /export/home directory:
+mkdir -p /export/home
+
+
+Add the mapping for the /export/home directory to /etc/auto.master:
+vi /etc/auto.master
+
+At the end of the file, above the line with +auto.master, add:
+/export/home  	/etc/auto.home
+
+Save and quit:
+:wq
+
+
+Edit /etc/auto.home:
+vi /etc/auto.home
+
+Add the following line: (NOTE: Use command ip addr on server2 for private IP address)
+*	<second_server_private_IP>:/home/&
+
+Save and quit:
+:wq
+
+
+Confirm NFS export:
+showmount -e <second_server_private_IP>
+
+Start and enable autofs service:
+systemctl enable --now autofs
+
+Check autofs status:
+systemctl status autofs
+
+On server1, change user's home directory locations to /export/home:
+for i in Fred Sam Mark Amber Jaz Tina; do usermod -d /export/home/$i $i; done
+
+Confirm changes:
+grep -E 'Fred|Sam|Mark|Amber|Jaz|Tina' /etc/passwd
+
+On server1, test as the user Fred:
+su - Fred
+
+Check directory:
+pwd
+
+Create a file:
+touch file1
+
+Create a directory:
+mkdir directory1
+
+Check our work:
+ls -la
+
+Log out Fred:
+exit
+
+
+On server1, test as Sam:
+su - Sam
+
+Check directory:
+pwd
+
+Create a file:
+touch file1
+
+Create a directory:
+mkdir directory1
+
+Check our work:
+ls -la
+
+Log out Sam:
+exit
+
+On server1, test as Mark:
+su - Mark
+
+Check directory:
+pwd
+
+Create a file:
+touch file1
+
+Create a directory:
+mkdir directory1
+
+Check our work:
+ls -la
+
+Log out Mark:
+exit
+
+Confirm that the home directories are mounted via autofs on the first server:
+mount | grep home
+

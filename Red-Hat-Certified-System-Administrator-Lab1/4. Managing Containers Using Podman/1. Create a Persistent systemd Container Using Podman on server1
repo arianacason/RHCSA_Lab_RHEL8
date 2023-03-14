@@ -1,0 +1,68 @@
+Verify if admin: (NOTE: If not, log out and log in directly as admin)
+whoami
+
+Create the ~/.config/systemd/user directory:
+mkdir -p ~/.config/systemd/user
+
+Change directory to the new directory:
+cd ~/.config/systemd/user
+
+Verify working directory:
+pwd
+
+Create directory:
+mkdir ~/web_data
+
+Create a text file in the new directory:
+echo "Test data" > ~/web_data/test.txt
+
+Verify:
+cat ~/web_data/test.txt
+
+Create a container to generate systemd unit files:
+podman run -d --name web_server -p 8000:8080 -v ~/web_data:/var/www/html:Z registry.access.redhat.com/rhscl/httpd-24-rhel7
+
+Verify running container:
+podman ps -a
+
+Test:
+curl http://127.0.0.1:8000/test.txt
+
+Verify working directory:
+pwd
+
+Generate systemd unit files:
+podman generate systemd --name web_server --files --new
+
+Verify running container:
+podman ps -a
+
+Stop web_server:
+podman stop web_server
+
+Remove web_server:
+podman rm web_server
+
+Verify running container:
+podman ps -a
+
+Configure our container to start when the system boots:
+loginctl enable-linger
+
+Verify changes:
+loginctl show-user admin | grep -i linger
+
+Reload systemd to pick up the new unit:
+systemctl --user daemon-reload
+
+Enable and start the container service as the user:
+systemctl --user enable --now container-web_server.service
+
+Check the status of the container service:
+systemctl --user status container-web_server
+
+Verify running container:
+podman ps -a
+
+Final check:
+curl http://127.0.0.1:8000/test.txt

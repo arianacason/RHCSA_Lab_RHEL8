@@ -1,0 +1,52 @@
+Become root:
+sudo -i
+
+Install Stratis:
+yum -y install stratisd stratis-cli
+
+Enable and start Stratis:
+systemctl enable --now stratisd
+
+Check Stratis status:
+systemctl status stratisd
+
+View available devices:
+lsblk
+
+Create our Stratis pool:
+stratis pool create appteam <second_unused_2G_device_name>
+
+Verify changes:
+lsblk
+
+View block devices:
+stratis blockdev
+
+View filesystems:
+stratis fs
+
+Create stratis filesystem:
+stratis fs create appteam appfs1
+
+View changes:
+ls -al /stratis/appteam/appfs1
+
+Create a mount point:
+mkdir -p /mnt/app_storage
+
+Configure a persistent mount:
+vi /etc/fstab
+
+Insert the following information at the very end of the file:
+/stratis/appteam/appfs1   /mnt/app_storage   xfs    defaults,x-systemd.requires=stratisd.service  0 0
+
+Save and quit:
+:wq
+
+Mount it:
+mount -a
+
+Confirm changes:
+mount | grep app_
+
+df -h /mnt/app_storage

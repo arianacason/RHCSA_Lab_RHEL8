@@ -1,0 +1,47 @@
+Install cronie and at:
+yum -y install cronie at
+
+Verify install:
+yum list --installed cronie at
+
+Verify crond is running:
+systemctl status crond
+
+Verify atd status:
+systemctl status atd
+
+Enable atd:
+systemctl enable --now atd
+
+Verify atd status:
+systemctl status atd
+
+Add a cron job:
+crontab -e
+
+Add the following line:
+* * * * *  echo `date` >> /web/html/cron.html
+
+Save and quit:
+:wq
+
+
+Verify changes:
+crontab -l
+
+Verify cron job:
+cat /web/html/cron.html
+
+Add the at job:
+at now +2 minutes
+
+Insert the following:
+echo "The at job ran" >> /web/html/at.html
+Submit the changes by entering CTRL-D.
+
+Verify the changes:
+atq
+
+Verify at job:
+cat /web/html/at.html
+

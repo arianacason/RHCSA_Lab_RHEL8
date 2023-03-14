@@ -1,0 +1,23 @@
+Start a new stress process, set the niceness to 19, run it in the background:
+nice -n 19 stress -c 1 &
+
+Verify stress processes and view process IDs:
+ps -ef | grep stress
+
+View processes:
+top
+
+View process ID:
+pgrep stress
+
+Adjust niceness:
+renice -n 10 <PID2>
+
+Verify:
+top
+
+Kill the stress process:
+pkill stress
+
+Verify:
+pgrep stress

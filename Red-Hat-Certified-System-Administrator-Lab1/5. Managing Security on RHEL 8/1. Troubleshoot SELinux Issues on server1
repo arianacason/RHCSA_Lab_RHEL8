@@ -1,0 +1,96 @@
+Become root:
+sudo -i
+
+Check Apache service status:
+systemctl status httpd
+
+Check sestatus:
+sestatus
+
+Check SELinux status:
+getenforce
+
+Temporarily disable SELinux:
+setenforce 0
+
+Verify SELinux status:
+getenforce
+
+Try to start Apache:
+systemctl start httpd
+
+Verify Apache status:
+systemctl status httpd
+
+Check Apache using curl:
+curl http://127.0.0.1:85/test.html
+
+Stop Apache:
+systemctl stop httpd
+
+Check SELinux status:
+getenforce
+
+Enable SELinux:
+setenforce 1
+
+Verify SELinux status:
+getenforce
+
+Verify usingsestatus:
+sestatus
+
+Check systemd journal:
+journalctl -u httpd
+
+Check Apache errors in the audit log:
+grep httpd /var/log/audit/audit.log | less
+
+Exit journalctl:
+q
+
+Check using ausearch:
+ausearch -c 'httpd' --raw
+
+Check /var/log/messages:
+grep httpd /var/log/messages | less
+
+Generate a local policy module:
+ausearch -c 'httpd' --raw | audit2allow -M my-httpd
+
+Activate new policy:
+semodule -i my-httpd.pp
+
+Start Apache:
+systemctl start httpd
+
+Verify Apache status:
+systemctl status httpd
+
+Check Apache, by loading test page:
+curl http://127.0.0.1:85/test.html
+
+Check SELinux file errors in file /web/html/test.html:
+grep 'test.html' /var/log/messages | grep fcontext | less
+
+Check SELinux file context on /web directory:
+ls -alZ /web
+
+Use the suggested fix from the warning message:
+semanage fcontext -a -t httpd_sys_content_t "/web(/.*)?"
+
+Apply the fix:
+restorecon -Rv /web
+
+Verify changes:
+ls -alZ /web
+ls -alZ /web/html
+
+Restart Apache:
+systemctl restart httpd
+
+Check Apache, by loading test page:
+curl http://127.0.0.1:85/test.html
+
+Check /var/log/messages:
+tail -50 /var/log/messages | less

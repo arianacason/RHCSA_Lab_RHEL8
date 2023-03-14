@@ -1,0 +1,20 @@
+Elevate to root:
+sudo -i (For RHEL 9 its "su - ")
+
+Create directory:
+mkdir /var/log/journal
+
+View contents of directory:
+ls -al /var/log/journal
+
+Clear journal:
+journalctl
+
+Force the system to log:
+systemctl restart chronyd
+
+View contents of directory:
+ls -al /var/log/journal
+
+View contents of /run/log/journal:
+ls -al /run/log/journal
